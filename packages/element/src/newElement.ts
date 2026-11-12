@@ -334,6 +334,9 @@ const getTextElementPositionOffsets = (
   };
 };
 
+/** Text this long usually means a paste went wrong; worth a log line. */
+const TEXT_LENGTH_WARNING_THRESHOLD = 10_000;
+
 export const newTextElement = (
   opts: {
     text: string;
@@ -354,6 +357,12 @@ export const newTextElement = (
   const fontSize = opts.fontSize || DEFAULT_FONT_SIZE;
   const lineHeight = opts.lineHeight || getLineHeight(fontFamily);
   const text = normalizeText(opts.text);
+  if (text.length > TEXT_LENGTH_WARNING_THRESHOLD) {
+    console.warn(
+      `newTextElement: unusually long text (${text.length} chars)`,
+      text.slice(0, 200),
+    );
+  }
   const metrics = measureText(
     text,
     getFontString({ fontFamily, fontSize }),
