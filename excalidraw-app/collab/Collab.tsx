@@ -26,6 +26,7 @@ import { isImageElement, isInitializedImageElement } from "@excalidraw/element";
 import { AbortError } from "@excalidraw/excalidraw/errors";
 import { t } from "@excalidraw/excalidraw/i18n";
 import { withBatchedUpdates } from "@excalidraw/excalidraw/reactUtils";
+import { trackEvent } from "@excalidraw/excalidraw/analytics";
 
 import throttle from "lodash.throttle";
 import { PureComponent } from "react";
@@ -1037,6 +1038,7 @@ class Collab extends PureComponent<CollabProps, CollabState> {
   setUsername = (username: string) => {
     this.setState({ username });
     saveUsernameToLocalStorage(username);
+    trackEvent("collab", "username_change", username);
 
     // keep our own collaborator entry in sync
     const socketId = this.portal.socket?.id as SocketId | undefined;
