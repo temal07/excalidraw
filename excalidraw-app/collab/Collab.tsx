@@ -54,6 +54,8 @@ import type {
 import type { Mutable, ValueOf } from "@excalidraw/common/utility-types";
 
 import { appJotaiStore, atom } from "../app-jotai";
+
+import { reportCollaboratorUpdate } from "./collabTelemetry";
 import {
   CURSOR_SYNC_TIMEOUT,
   FILE_UPLOAD_MAX_BYTES,
@@ -910,6 +912,7 @@ class Collab extends PureComponent<CollabProps, CollabState> {
   }
 
   updateCollaborator = (socketId: SocketId, updates: Partial<Collaborator>) => {
+    reportCollaboratorUpdate(updates);
     const isCurrentUser = socketId === this.portal.socket?.id;
     const collaborators = new Map(this.collaborators);
     const user: Mutable<Collaborator> = Object.assign(
